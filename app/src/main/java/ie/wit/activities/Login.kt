@@ -10,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-//import com.google.firebase.quickstart.auth.R
 import ie.wit.R
 import ie.wit.main.DonationApp
+import ie.wit.models.UserModel
 import ie.wit.utils.createLoader
 import ie.wit.utils.hideLoader
 import ie.wit.utils.showLoader
@@ -27,9 +27,11 @@ import kotlinx.android.synthetic.main.login.signOutButton
 import kotlinx.android.synthetic.main.login.signedInButtons
 import kotlinx.android.synthetic.main.login.status
 import kotlinx.android.synthetic.main.login.verifyEmailButton
+import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.startActivity
+import java.util.HashMap
 
-class Login : AppCompatActivity(), View.OnClickListener {
+class Login : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     lateinit var app: DonationApp
     lateinit var loader : AlertDialog
@@ -45,6 +47,7 @@ class Login : AppCompatActivity(), View.OnClickListener {
         verifyEmailButton.setOnClickListener(this)
 
         app.auth = FirebaseAuth.getInstance()
+        app.database = FirebaseDatabase.getInstance().reference
 
         loader = createLoader(this)
     }
@@ -70,6 +73,9 @@ class Login : AppCompatActivity(), View.OnClickListener {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     val user = app.auth.currentUser
+                    addUserDetails(UserModel(uid = app.auth.currentUser!!.uid, email = app.auth.currentUser?.email,
+                        name="Add your name", imageUrl = "https://firebasestorage.googleapis.com/v0/b/donationo-app.appspot.com/o/login_homer.png?alt=media&token=7ea70a48-48cd-4354-b54f-fe3a897a912a"
+                        ))
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -114,6 +120,16 @@ class Login : AppCompatActivity(), View.OnClickListener {
                 // [END_EXCLUDE]
             }
         // [END sign_in_with_email]
+    }
+
+    fun addUserDetails(user: UserModel) {
+        showLoader(loader, "Adding user")
+        val uid = app.auth.currentUser!!.uid
+        val userDetails = user.toMap()
+        val childUpdates = HashMap<String, Any>()
+        childUpdates["/user-details/$uid"] = userDetails
+        app.database.updateChildren(childUpdates)
+        hideLoader(loader)
     }
 
     private fun signOut() {

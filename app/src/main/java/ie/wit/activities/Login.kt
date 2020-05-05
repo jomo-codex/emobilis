@@ -1,5 +1,6 @@
 package ie.wit.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -7,8 +8,16 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import ie.wit.R
 import ie.wit.main.DonationApp
@@ -16,17 +25,7 @@ import ie.wit.models.UserModel
 import ie.wit.utils.createLoader
 import ie.wit.utils.hideLoader
 import ie.wit.utils.showLoader
-import kotlinx.android.synthetic.main.login.detail
-import kotlinx.android.synthetic.main.login.emailCreateAccountButton
-import kotlinx.android.synthetic.main.login.emailPasswordButtons
-import kotlinx.android.synthetic.main.login.emailPasswordFields
-import kotlinx.android.synthetic.main.login.emailSignInButton
-import kotlinx.android.synthetic.main.login.fieldEmail
-import kotlinx.android.synthetic.main.login.fieldPassword
-import kotlinx.android.synthetic.main.login.signOutButton
-import kotlinx.android.synthetic.main.login.signedInButtons
-import kotlinx.android.synthetic.main.login.status
-import kotlinx.android.synthetic.main.login.verifyEmailButton
+import kotlinx.android.synthetic.main.login.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.startActivity
 import java.util.HashMap
@@ -35,6 +34,8 @@ class Login : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     lateinit var app: DonationApp
     lateinit var loader : AlertDialog
+    lateinit var mGoogleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 9001
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +51,45 @@ class Login : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         app.database = FirebaseDatabase.getInstance().reference
 
         loader = createLoader(this)
+
+        // Sign-in with google
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("241314629573-0vrt4oack9eqphtc1q9gt61fl9mtlqiv.apps.googleusercontent.com")
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        sign_in_button.setOnClickListener {
+            signInViaGoogle()
+        }
+
+
+    }
+
+    private fun signInViaGoogle() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(
+            signInIntent, RC_SIGN_IN
+        )
+    }
+
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        app.auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithCredential:success")
+                    val user = app.auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    Snackbar.make(main_layout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                    updateUI(null)
+                }
+
+            }
     }
 
     public override fun onStart() {
@@ -218,6 +258,51 @@ class Login : AppCompatActivity(), View.OnClickListener, AnkoLogger {
             R.id.emailSignInButton -> signIn(fieldEmail.text.toString(), fieldPassword.text.toString())
             R.id.signOutButton -> signOut()
             R.id.verifyEmailButton -> sendEmailVerification()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val task =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleGoogleSignInResult(task)
+        }
+    }
+
+    private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(
+                ApiException::class.java
+            )
+            // Signed in successfully
+            val googleId = account?.id ?: ""
+            Log.i("Google ID",googleId)
+
+            val googleFirstName = account?.givenName ?: ""
+            Log.i("Google First Name", googleFirstName)
+
+            val googleLastName = account?.familyName ?: ""
+            Log.i("Google Last Name", googleLastName)
+
+            val googleEmail = account?.email ?: ""
+            Log.i("Google Email", googleEmail)
+
+            val googleProfilePicURL = account?.photoUrl.toString()
+            Log.i("Google Profile Pic URL", googleProfilePicURL)
+
+            val googleIdToken = account?.idToken ?: ""
+            Log.i("Google ID Token", googleIdToken)
+
+//            addUserDetails(UserModel(uid = app.auth.currentUser!!.uid, email = app.auth.currentUser?.email,
+//                name="Add your name", imageUrl = "https://firebasestorage.googleapis.com/v0/b/donationo-app.appspot.com/o/login_homer.png?alt=media&token=7ea70a48-48cd-4354-b54f-fe3a897a912a"
+//            ))
+
+        } catch (e: ApiException) {
+            // Sign in was unsuccessful
+            Log.e(
+                "failed code=", e.statusCode.toString()
+            )
         }
     }
 

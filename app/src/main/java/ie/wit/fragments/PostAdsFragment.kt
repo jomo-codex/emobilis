@@ -102,8 +102,8 @@ class PostAdsFragment : Fragment(), AnkoLogger {
             return
         }
         ads.uid = key
+        ads.userId = uid
         val adsValues = ads.toMap()
-info { "maybe this will help" + adsValues }
         val childUpdates = HashMap<String, Any>()
         childUpdates["/advertisements/$key"] = adsValues
         childUpdates["/user-advertisements/$uid/$key"] = adsValues

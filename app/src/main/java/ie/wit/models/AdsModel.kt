@@ -16,6 +16,7 @@ data class AdsModel(
     var short_description: String = "Some short product Description",
     var description: String = "Some product Description",
     var posted_on: String = "Some date",
+    var userId: String =  "",
     var imageUrl: String = "N/A",
     var upvotes: Int = 0
 ): Parcelable
@@ -28,6 +29,7 @@ data class AdsModel(
             "name_price" to name_price,
             "short_description" to short_description,
             "description" to description,
+            "userId" to userId,
             "posted_on" to posted_on,
             "imageUrl" to imageUrl,
             "upvotes" to upvotes

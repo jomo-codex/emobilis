@@ -49,7 +49,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/product_shortdescription"
+                android:id="@+id/price_exchange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"

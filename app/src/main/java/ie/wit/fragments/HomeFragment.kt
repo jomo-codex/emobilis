@@ -96,7 +96,7 @@ class HomeFragment : Fragment(), AnkoLogger, HomeListener {
                         app.database.child("advertisements")
                             .removeEventListener(this)
                     }
-                    info { "This is the final list of advertismenrs" + adsList }
+                    info { "This is the final list of advertismenrs$adsList" }
                     hideLoader(loader)
                 }
 

@@ -79,10 +79,12 @@ class PostAdsFragment : Fragment(), AnkoLogger {
 
         layout.postNow.setOnClickListener{
             val productName = layout.product_name.text.trim().toString()
-            val priceOrBarter = layout.product_price_bname.text.trim().toString()
+            val priceOrBarter = layout.product_price_name.text.trim().toString()
+            val productShortDescription = layout.product_short_description.text.trim().toString()
             val productDescription = layout.product_description.text.trim().toString()
-            if (productName.isNotEmpty() && priceOrBarter.isNotEmpty() && productDescription.isNotEmpty() && ImageUrl.length > 5)
-                savePostDataToDatabase(AdsModel(name= productName, name_price=priceOrBarter, description=productDescription, imageUrl=ImageUrl))
+            val postedOn = SimpleDateFormat("yyyy:MM:dd:HH:mm:ss").format(Date())
+            if (productName.isNotEmpty() && priceOrBarter.isNotEmpty() && productShortDescription.isNotEmpty() && productDescription.isNotEmpty() && ImageUrl.length > 5)
+                savePostDataToDatabase(AdsModel(name= productName, name_price=priceOrBarter, short_description=productShortDescription, description=productDescription, posted_on=postedOn , imageUrl=ImageUrl))
             else
                 Toast.makeText(context , "All fields are required!", Toast.LENGTH_SHORT).show()
         }

@@ -23,7 +23,7 @@ class Fragment1 : Fragment(), AnkoLogger {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        activity?.title = getString(R.string.aboutus_title)
+        activity?.title = ""
 info { "rendering from fragment1" }
         return inflater?.inflate(R.layout.fragment_tab1, container, false)
 

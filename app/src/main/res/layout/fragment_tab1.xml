@@ -53,9 +53,60 @@
             <TextView
                 android:id="@+id/product_shortdescription"
                 android:layout_width="match_parent"
-                android:layout_height="89dp"
+                android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/some_random_text_to_fill_up_short_description_of_100_words_to_200_words_can_be_more_but_ideally_it_has_to_be_in_full_description"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="Posted On: "
+                android:textColor="@color/headings"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/posted_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/alex"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+            android:layout_width="wrap_content"
+            android:paddingTop="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/posted_by"
+            android:textColor="@color/headings"
+            android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/posted_by"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/alex"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_details"
+                android:textColor="@color/headings"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/contact_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/a_b_c_com"
                 android:textColor="#000000"
                 android:textSize="13sp" />
 

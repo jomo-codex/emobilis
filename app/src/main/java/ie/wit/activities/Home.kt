@@ -12,15 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import ie.wit.R
-import ie.wit.fragments.AboutUsFragment
-import ie.wit.fragments.DonateFragment
-import ie.wit.fragments.ReportFragment
 import ie.wit.main.DonationApp
 import ie.wit.utils.showImagePicker
 import kotlinx.android.synthetic.main.app_bar_home.*
@@ -32,15 +28,14 @@ import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import ie.wit.models.UserModel
 import ie.wit.utils.readImage
 import com.squareup.picasso.Picasso
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import ie.wit.fragments.*
 
 
 class Home : AppCompatActivity(), AnkoLogger,
@@ -52,6 +47,7 @@ class Home : AppCompatActivity(), AnkoLogger,
     val IMAGE_REQUEST = 1
     lateinit var imageUrl: String
     lateinit var userName: String
+    lateinit var bottomNavView :BottomNavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +67,9 @@ class Home : AppCompatActivity(), AnkoLogger,
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        // Initialize bottom navigation
+        bottomNavView = findViewById(R.id.navigation)
+        bottomNavView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         //Populate user email in profile
         navView.getHeaderView(0).nav_header_email.text = app.auth.currentUser?.email
@@ -100,18 +99,39 @@ class Home : AppCompatActivity(), AnkoLogger,
 
         // Load home fragment
         ft = supportFragmentManager.beginTransaction()
-        val fragment = DonateFragment.newInstance()
+        val fragment = HomeFragment.newInstance()
         ft.replace(R.id.homeFrame, fragment)
         ft.commit()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    private val mOnNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    bottomNavView.menu.findItem(R.id.navigation_home).isChecked = true
+                    navigateTo(HomeFragment.newInstance())
+                }
+                R.id.navigation_postads-> {
+                    bottomNavView.menu.findItem(R.id.navigation_postads).isChecked = true
+                    navigateTo(PostAdsFragment.newInstance())
+                }
+                R.id.navigation_profile -> {
+                    bottomNavView.menu.findItem(R.id.navigation_profile).isChecked = true
+                    navigateTo(ProfileFragment.newInstance())
+                }
+            }
+            false
+        }
 
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_donate ->
-                navigateTo(DonateFragment.newInstance())
+                navigateTo(HomeFragment.newInstance())
             R.id.nav_report ->
                 navigateTo(ReportFragment.newInstance())
+            R.id.nav_favourites ->
+                navigateTo(FavouritesFragment.newInstance())
             R.id.nav_aboutus ->
                 navigateTo(AboutUsFragment.newInstance())
             R.id.nav_sign_out ->

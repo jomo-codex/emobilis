@@ -45,7 +45,8 @@ class Login : AppCompatActivity(), AnkoLogger {
             // Already signed in
             startActivity<Home>()
             finish()
-        } else {
+        }
+        else {
             // Not signed in. Start the login flow.
             startActivityForResult(
                 AuthUI.getInstance()

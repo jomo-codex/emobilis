@@ -2,34 +2,36 @@ package ie.wit.fragments
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-
 import ie.wit.R
+import ie.wit.adapters.HomeAdapter
+import ie.wit.adapters.HomeListener
 import ie.wit.main.DonationApp
-import ie.wit.models.DonationModel
-import ie.wit.utils.*
-import kotlinx.android.synthetic.main.fragment_donate.*
-import kotlinx.android.synthetic.main.fragment_donate.view.*
+import ie.wit.models.AdsModel
+import ie.wit.utils.createLoader
+import ie.wit.utils.hideLoader
+import ie.wit.utils.showLoader
+import kotlinx.android.synthetic.main.fragment_report.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
-import java.lang.String.format
-import java.util.HashMap
 
 
-class DonateFragment : Fragment(), AnkoLogger {
+class HomeFragment : Fragment(), AnkoLogger, HomeListener {
 
     lateinit var app: DonationApp
     var totalDonated = 0
-    lateinit var loader : AlertDialog
-    lateinit var eventListener : ValueEventListener
+    lateinit var loader: AlertDialog
+    lateinit var eventListener: ValueEventListener
+    lateinit var root: View
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,98 +43,70 @@ class DonateFragment : Fragment(), AnkoLogger {
         savedInstanceState: Bundle?
     ): View? {
 
-        val root = inflater.inflate(R.layout.fragment_report, container, false)
+        root = inflater.inflate(R.layout.fragment_report, container, false)
         loader = createLoader(activity!!)
         activity?.title = "Home"
 
-        root.progressBar.max = 10000
-        root.amountPicker.minValue = 1
-        root.amountPicker.maxValue = 1000
+        root.recyclerView.layoutManager = GridLayoutManager(activity, 2)
+        setSwipeRefresh()
+        getAllAdvertisments()
 
-        root.amountPicker.setOnValueChangedListener { picker, oldVal, newVal ->
-            //Display the newly selected number to paymentAmount
-            root.paymentAmount.setText("$newVal")
-        }
-        setButtonListener(root)
         return root;
     }
 
     companion object {
         @JvmStatic
         fun newInstance() =
-            DonateFragment().apply {
+            HomeFragment().apply {
                 arguments = Bundle().apply {}
             }
     }
 
-    fun setButtonListener( layout: View) {
-        layout.donateButton.setOnClickListener {
-            val amount = if (layout.paymentAmount.text.isNotEmpty())
-                layout.paymentAmount.text.toString().toInt() else layout.amountPicker.value
-            if(totalDonated >= layout.progressBar.max)
-                activity?.toast("Donate Amount Exceeded!")
-            else {
-                val paymentmethod = if(layout.paymentMethod.checkedRadioButtonId == R.id.Direct) "Direct" else "Paypal"
-                writeNewDonation(DonationModel(paymenttype = paymentmethod, amount = amount,
-                                               email = app.auth.currentUser?.email))
-            }
+    fun setSwipeRefresh() {
+        root.swiperefresh.setOnRefreshListener {
+            root.swiperefresh.isRefreshing = true
+            getAllAdvertisments()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        getTotalDonated(app.auth.currentUser?.uid)
+    fun checkSwipeRefresh() {
+        if (root.swiperefresh.isRefreshing) root.swiperefresh.isRefreshing = false
     }
 
-    override fun onPause() {
-        super.onPause()
-        if(app.auth.uid != null) {
-            app.database.child("user-donations")
-                .child(app.auth.currentUser!!.uid)
-                .removeEventListener(eventListener)
-        }
-    }
-
-    fun writeNewDonation(donation: DonationModel) {
-        // Create new donation at /donations & /donations/$uid
-        showLoader(loader, "Adding Donation to Firebase")
-        info("Firebase DB Reference : $app.database")
-        val uid = app.auth.currentUser!!.uid
-        val key = app.database.child("donations").push().key
-        if (key == null) {
-            info("Firebase Error : Key Empty")
-            return
-        }
-        donation.uid = key
-        val donationValues = donation.toMap()
-
-        val childUpdates = HashMap<String, Any>()
-        childUpdates["/donations/$key"] = donationValues
-        childUpdates["/user-donations/$uid/$key"] = donationValues
-
-        app.database.updateChildren(childUpdates)
-        hideLoader(loader)
-    }
-
-    fun getTotalDonated(userId: String?) {
-        eventListener = object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                info("Firebase Donation error : ${error.message}")
-            }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                totalDonated = 0
-                val children = snapshot.children
-                children.forEach {
-                    val donation = it.getValue<DonationModel>(DonationModel::class.java)
-                    totalDonated += donation!!.amount
+    fun getAllAdvertisments() {
+        loader = createLoader(activity!!)
+        showLoader(loader, "Loading all advertisements from Database")
+        val adsList = ArrayList<AdsModel>()
+        app.database.child("advertisements")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase Donation error : ${error.message}")
                 }
-                progressBar.progress = totalDonated
-                totalSoFar.text = format("$ $totalDonated")
-            }
-        }
 
-        app.database.child("user-donations").child(userId!!)
-            .addValueEventListener(eventListener)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val children = snapshot.children
+                    children.forEach {
+                        val ad = it.getValue(AdsModel::class.java)
+                        adsList.add(ad!!)
+                        root.recyclerView.adapter =
+                            HomeAdapter(adsList, this@HomeFragment)
+                        root.recyclerView.adapter?.notifyDataSetChanged()
+                        checkSwipeRefresh()
+
+                        app.database.child("advertisements")
+                            .removeEventListener(this)
+                    }
+                    info { "This is the final list of advertismenrs" + adsList }
+                    hideLoader(loader)
+                }
+
+            })
+    }
+
+    override fun onAdClick(ad: AdsModel) {
+        activity!!.supportFragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, AdDescriptionFragment.newInstance(ad))
+            .addToBackStack(null)
+            .commit()
     }
 }

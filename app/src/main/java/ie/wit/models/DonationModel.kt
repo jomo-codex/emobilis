@@ -13,6 +13,7 @@ data class DonationModel(
     var amount: Int = 0,
     var message: String = "a message",
     var upvotes: Int = 0,
+    var isfav: Boolean = false,
     var email: String? = "joe@bloggs.com")
                         : Parcelable
 {
@@ -24,6 +25,7 @@ data class DonationModel(
             "amount" to amount,
             "message" to message,
             "upvotes" to upvotes,
+            "isfav" to isfav,
             "email" to email
         )
     }

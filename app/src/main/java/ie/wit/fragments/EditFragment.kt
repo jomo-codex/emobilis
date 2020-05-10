@@ -47,7 +47,7 @@ class EditFragment : Fragment(), AnkoLogger {
         loader = createLoader(activity!!)
 
         root.editAmount.setText(editDonation!!.amount.toString())
-        root.editPaymenttype.setText(editDonation!!.paymenttype)
+        root.editPaymenttype.text = editDonation!!.paymenttype
         root.editMessage.setText(editDonation!!.message)
         root.editUpvotes.setText(editDonation!!.upvotes.toString())
 

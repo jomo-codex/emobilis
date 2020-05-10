@@ -41,9 +41,9 @@ class DonateFragment : Fragment(), AnkoLogger {
         savedInstanceState: Bundle?
     ): View? {
 
-        val root = inflater.inflate(R.layout.fragment_donate, container, false)
+        val root = inflater.inflate(R.layout.fragment_report, container, false)
         loader = createLoader(activity!!)
-        activity?.title = getString(R.string.action_donate)
+        activity?.title = "Home"
 
         root.progressBar.max = 10000
         root.amountPicker.minValue = 1

@@ -73,10 +73,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit_name">Enter your name</string>
     <string name="upload_image_if_any">Upload image if any:</string>
-    <string name="product_description">Product description:</string>
+    <string name="product_description">Product detailed description:</string>
     <string name="product_price_bartering_item_name">Product price / Bartering item name:</string>
     <string name="product_name">Product Name:</string>
-    <string name="tell_us_about_the_product_you_would_like_to_sell_or_barter">Tell us about the product you would like to sell or barter.</string>
+    <string name="tell_us_about_the_product_you_would_like_to_sell_or_barter">Tell us about the product or service you would like to sell, provide or exchange. The more you define about your product or service, The better views and responses you will get.</string>
     <string name="home">Home</string>
     <string name="post_ad">Post Ad</string>
     <string name="profile">Profile</string>
@@ -85,6 +85,15 @@
     <string name="todo">TODO</string>
     <string name="short_description">Short description:</string>
     <string name="some_random_text_to_fill_up_short_description_of_100_words_to_200_words_can_be_more_but_ideally_it_has_to_be_in_full_description">Some random text to fill up short description of 100 words to 200 words. Can be more but ideally it has to be in full description.</string>
+    <string name="posted_by">Posted By:</string>
+    <string name="alex">Alex</string>
+    <string name="contact_details">Contact details:</string>
+    <string name="a_b_c_com">a.b@c.com</string>
+    <string name="some_description_that_can_be_large_enough_some_description_that_can_be_large_enough_some_description_that_can_be_large_enough_some_description_that_can_be_large_enough_some_description_that_can_be_large_enough">Some description that can be large enough Some description that can be large enough Some description that can be large enough Some description that can be large enough Some description that can be large enough</string>
+    <string name="price_exchange">Price/Exchange:</string>
+    <string name="description">Description:</string>
+    <string name="product_short_description">Product short description:</string>
+    <string name="joey_tribbiani">Joey Tribbiani</string>
 
     <!--END Firebase Resources-->
 </resources>

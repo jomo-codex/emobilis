@@ -73,8 +73,10 @@ class Home : AppCompatActivity(), AnkoLogger,
 
         //Populate user email in profile
         navView.getHeaderView(0).nav_header_email.text = app.auth.currentUser?.email
+
         //Create imageName for user profile image
         storageReference = FirebaseStorage.getInstance().getReference(app.auth.currentUser?.email +"_"+ app.auth.currentUser?.uid)
+
         //Change user profile image on click
         navView.getHeaderView(0).chooseImage.setOnClickListener{
             showImagePicker(this, IMAGE_REQUEST)
@@ -218,6 +220,7 @@ class Home : AppCompatActivity(), AnkoLogger,
             run {
                 if(editText.text.toString().trim().length > 0){
                     app.database.child("user-details").child(app.auth.currentUser!!.uid ).child("name").setValue(editText.text.toString().trim())
+                    app.database.child("user-details").child(app.auth.currentUser!!.uid ).child("email").setValue(app.auth.currentUser!!.email)
                     navView.getHeaderView(0).nav_header_username.text = editText.text.toString().trim()
                     Toast.makeText(
                         applicationContext,

@@ -64,7 +64,7 @@
                 android:layout_below="@+id/profile_username"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="sans-serif"
-                android:text="Enter your address"
+                android:text="@string/enter_your_address"
                 android:textAllCaps="true"
                 android:textColor="@color/cardview_dark_background"
                 android:textSize="14sp" />
@@ -99,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="453K"
+                        android:text="@string/_453k"
                         android:textColor="@color/white"
                         android:textSize="25sp" />
 
@@ -107,7 +107,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="Total Ads"
+                        android:text="@string/total_ads"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
@@ -137,7 +137,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="873"
+                        android:text="@string/_873"
                         android:textColor="@color/white"
                         android:textSize="25sp" />
 
@@ -145,7 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="Total likes"
+                        android:text="@string/total_favourites"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="13sp" />

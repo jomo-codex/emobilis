@@ -102,6 +102,11 @@
     <string name="my_ads">My Ads</string>
     <string name="home">Home</string>
     <string name="search">Search..</string>
+    <string name="total_favourites">Total Favourites</string>
+    <string name="_873">873</string>
+    <string name="total_ads">Total Ads</string>
+    <string name="_453k">453K</string>
+    <string name="enter_your_address">Enter your address</string>
 
     <!--END Firebase Resources-->
 </resources>

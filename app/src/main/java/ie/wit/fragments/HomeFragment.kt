@@ -1,10 +1,14 @@
 package ie.wit.fragments
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,7 +23,10 @@ import ie.wit.models.AdsModel
 import ie.wit.utils.createLoader
 import ie.wit.utils.hideLoader
 import ie.wit.utils.showLoader
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.fragment_report.view.*
+import kotlinx.android.synthetic.main.fragment_report.view.recyclerView
+import kotlinx.android.synthetic.main.fragment_report.view.swiperefresh
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
@@ -27,10 +34,11 @@ import org.jetbrains.anko.info
 class HomeFragment : Fragment(), AnkoLogger, HomeListener {
 
     lateinit var app: DonationApp
-    var totalDonated = 0
+    var isSearch = false
     lateinit var loader: AlertDialog
     lateinit var eventListener: ValueEventListener
     lateinit var root: View
+    lateinit var searchKey: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +51,7 @@ class HomeFragment : Fragment(), AnkoLogger, HomeListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        root = inflater.inflate(R.layout.fragment_report, container, false)
+        root = inflater.inflate(R.layout.fragment_home, container, false)
         loader = createLoader(activity!!)
         activity?.title = "Home"
 
@@ -51,7 +59,31 @@ class HomeFragment : Fragment(), AnkoLogger, HomeListener {
         setSwipeRefresh()
         getAllAdvertisments()
 
+        val username = root.findViewById<EditText>(R.id.search_bar)
+        username.onRightDrawableClicked {
+            isSearch = true
+            searchKey = it.text.toString()
+            getAllAdvertisments()
+//            it.text.clear()
+        }
+
         return root;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun EditText.onRightDrawableClicked(onClicked: (view: EditText) -> Unit) {
+        this.setOnTouchListener { v, event ->
+            var hasConsumed = false
+            if (v is EditText) {
+                if (event.x >= v.width - v.totalPaddingRight) {
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        onClicked(this)
+                    }
+                    hasConsumed = true
+                }
+            }
+            hasConsumed
+        }
     }
 
     companion object {
@@ -87,7 +119,13 @@ class HomeFragment : Fragment(), AnkoLogger, HomeListener {
                     val children = snapshot.children
                     children.forEach {
                         val ad = it.getValue(AdsModel::class.java)
-                        adsList.add(ad!!)
+                       if (isSearch){
+                           if (ad!!.name.contains(searchKey)){
+                               adsList.add(ad)
+                           }
+                       }else
+                           adsList.add(ad!!)
+
                         root.recyclerView.adapter =
                             HomeAdapter(adsList, this@HomeFragment)
                         root.recyclerView.adapter?.notifyDataSetChanged()

@@ -124,6 +124,13 @@ class ProfileFragment : Fragment(), AnkoLogger {
             startActivityForResult(chooser, IMAGE_REQUEST)
         }
 
+        layout.total_ads_posted.setOnClickListener {
+            activity!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.homeFrame, MyadsFragment.newInstance())
+                .addToBackStack(null)
+                .commit()
+        }
+
         layout.profile_username.setOnClickListener {
             val title = "Edit name"
             val textToEdit = root.profile_username.text

@@ -38,9 +38,9 @@ class FavouritesAdapter constructor(var donations: ArrayList<DonationModel>)
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(donation: DonationModel) {
             itemView.tag = donation
-            itemView.paymentamount.text = donation.amount.toString()
-            itemView.paymentmethod.text = donation.paymenttype
-            itemView.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
+//            itemView.paymentamount.text = donation.amount.toString()
+//            itemView.paymentmethod.text = donation.paymenttype
+//            itemView.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
         }
     }
 }

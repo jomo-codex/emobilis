@@ -74,7 +74,6 @@ class PostAdsFragment : Fragment(), AnkoLogger {
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             val chooser = Intent.createChooser(intent, R.string.select_image.toString())
             startActivityForResult(chooser, IMAGE_REQUEST)
-//                activity?.toast("Donate Amount Exceeded!")
         }
 
         layout.postNow.setOnClickListener{
@@ -111,6 +110,10 @@ class PostAdsFragment : Fragment(), AnkoLogger {
         app.database.updateChildren(childUpdates)
         hideLoader(loader)
         Toast.makeText(context , "Your Ad is now live!", Toast.LENGTH_SHORT).show()
+        activity!!.supportFragmentManager.beginTransaction()
+            .replace(R.id.homeFrame, HomeFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
 
     }
 

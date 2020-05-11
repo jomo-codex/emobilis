@@ -4,14 +4,8 @@
     tools:context="ie.wit.activities.Donate">
 
     <item
-        android:id="@+id/action_report"
+        android:id="@+id/action_aboutus"
         android:orderInCategory="100"
-        android:title="@string/action_report"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_donate"
-        android:orderInCategory="100"
-        android:title="@string/action_donate"
+        android:title="About Us"
         app:showAsAction="never" />
 </menu>

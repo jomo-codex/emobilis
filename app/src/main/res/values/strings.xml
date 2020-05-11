@@ -77,7 +77,6 @@
     <string name="product_price_bartering_item_name">Product price / Bartering item name:</string>
     <string name="product_name">Product Name:</string>
     <string name="tell_us_about_the_product_you_would_like_to_sell_or_barter">Tell us about the product or service you would like to sell, provide or exchange. The more you define about your product or service, The better views and responses you will get.</string>
-    <string name="home">Home</string>
     <string name="post_ad">Post Ad</string>
     <string name="profile">Profile</string>
     <string name="product_price">product_price</string>
@@ -94,6 +93,14 @@
     <string name="description">Description:</string>
     <string name="product_short_description">Product short description:</string>
     <string name="joey_tribbiani">Joey Tribbiani</string>
+    <string name="some_random_short_description_full_of_small_words_to_inflate_this_view">Some random short description full of small words to inflate this view.</string>
+    <string name="update_post">Update Post</string>
+    <string name="selling_price_exchange_with">Selling Price / Exchange with</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="my_favourites">My Favourites</string>
+    <string name="access_control">Access Control</string>
+    <string name="my_ads">My Ads</string>
+    <string name="home">Home</string>
 
     <!--END Firebase Resources-->
 </resources>

@@ -101,6 +101,7 @@
     <string name="access_control">Access Control</string>
     <string name="my_ads">My Ads</string>
     <string name="home">Home</string>
+    <string name="search">Search..</string>
 
     <!--END Firebase Resources-->
 </resources>

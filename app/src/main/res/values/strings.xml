@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Donation</string>
+    <string name="app_name">TradeList</string>
     <string name="action_donate">Donate</string>
     <string name="action_postads">Enter details</string>
     <string name="action_report">All Donations</string>
-    <string name="action_favourites">Favourite Donations</string>
+    <string name="action_favourites">My Favourites</string>
     <string name="title_profile">My Profile</string>
     <string name="donateTitle">Welcome Homer</string>
     <string name="donateSubtitle">Please Give Generously</string>

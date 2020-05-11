@@ -3,7 +3,6 @@ package ie.wit.fragments
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -13,12 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.firebase.ui.auth.AuthUI.getApplicationContext
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -27,26 +20,18 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import ie.wit.R
-import ie.wit.adapters.FavouritesAdapter
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.models.AdsModel
-import ie.wit.models.DonationModel
-import ie.wit.models.UserModel
 import ie.wit.utils.*
-import kotlinx.android.synthetic.main.fragment_postads.view.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
-import kotlinx.android.synthetic.main.fragment_report.view.*
-import kotlinx.android.synthetic.main.home.*
-import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
 import java.io.IOException
-import java.util.*
 
 class ProfileFragment : Fragment(), AnkoLogger {
 
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     lateinit var loader : AlertDialog
     lateinit var root: View
     lateinit var storageReference: StorageReference
@@ -56,7 +41,7 @@ class ProfileFragment : Fragment(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as DonationApp
+        app = activity?.application as TradeList
 
     }
 

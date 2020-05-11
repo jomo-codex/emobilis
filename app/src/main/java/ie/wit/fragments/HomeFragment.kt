@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
@@ -18,13 +17,11 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.R
 import ie.wit.adapters.HomeAdapter
 import ie.wit.adapters.HomeListener
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.models.AdsModel
 import ie.wit.utils.createLoader
 import ie.wit.utils.hideLoader
 import ie.wit.utils.showLoader
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.fragment_report.view.*
 import kotlinx.android.synthetic.main.fragment_report.view.recyclerView
 import kotlinx.android.synthetic.main.fragment_report.view.swiperefresh
 import org.jetbrains.anko.AnkoLogger
@@ -33,7 +30,7 @@ import org.jetbrains.anko.info
 
 class HomeFragment : Fragment(), AnkoLogger, HomeListener {
 
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     var isSearch = false
     lateinit var loader: AlertDialog
     lateinit var eventListener: ValueEventListener
@@ -43,7 +40,7 @@ class HomeFragment : Fragment(), AnkoLogger, HomeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as DonationApp
+        app = activity?.application as TradeList
     }
 
     override fun onCreateView(

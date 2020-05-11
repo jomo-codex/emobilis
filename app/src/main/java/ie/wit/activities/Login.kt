@@ -4,7 +4,6 @@ package ie.wit.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
@@ -17,7 +16,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import ie.wit.R
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.models.UserModel
 import ie.wit.utils.createLoader
 import ie.wit.utils.hideLoader
@@ -28,7 +27,7 @@ import java.util.*
 
 class Login : AppCompatActivity(), AnkoLogger {
 
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     lateinit var loader : AlertDialog
     private val RC_SIGN_IN = 9001
     private lateinit var userPic : String
@@ -36,7 +35,7 @@ class Login : AppCompatActivity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = application as DonationApp
+        app = application as TradeList
         app.auth = FirebaseAuth.getInstance()
         app.database = FirebaseDatabase.getInstance().reference
         loader = createLoader(this)
@@ -78,7 +77,7 @@ class Login : AppCompatActivity(), AnkoLogger {
                         this.userPic = response.user.photoUri.toString()
                         this.userName = response.user.name.toString()
                     }else{
-                        this.userPic = "https://firebasestorage.googleapis.com/v0/b/donationo-app.appspot.com/o/fallback.png?alt=media&token=95087e2a-ae35-4664-ab59-9bd708fc1c82"
+                        this.userPic = "https://firebasestorage.googleapis.com/v0/b/donationo-app.appspot.com/o/fallback.png?alt=media&token=b2b9ed89-9792-4e4f-b12a-0ebae1578b8b"
                         this.userName = "Add your name"
                     }
                     addUserDetails(UserModel(uid = app.auth.currentUser!!.uid, email = app.auth.currentUser?.email,

@@ -11,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.PagerAdapter.POSITION_NONE
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.DataSnapshot
@@ -21,13 +19,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import ie.wit.R
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.models.AdsModel
 import ie.wit.utils.createLoader
-import ie.wit.utils.hideLoader
-import ie.wit.utils.showLoader
 import kotlinx.android.synthetic.main.fragment_ads_description.view.*
-import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.fragment_tab1.view.*
 import kotlinx.android.synthetic.main.fragment_tab2.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -36,7 +31,7 @@ import org.jetbrains.anko.toast
 
 class AdDescriptionFragment : Fragment(), AnkoLogger {
 
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     lateinit var loader : AlertDialog
     lateinit var root: View
     lateinit var viewPager: ViewPager
@@ -46,7 +41,7 @@ class AdDescriptionFragment : Fragment(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as DonationApp
+        app = activity?.application as TradeList
         arguments?.let {
             ad = it.getParcelable("adDescription")
         }
@@ -65,14 +60,6 @@ class AdDescriptionFragment : Fragment(), AnkoLogger {
                         root.addTofav.tag = "FabTrue"
                         root.addTofav.setImageResource(R.drawable.star_big_on)
                     }
-//                    getValue<DonationModel>(DonationModel::class.java)
-//                    if(donation!!.isfav) {
-//                        favouritesList.add(donation)
-//                    }
-//                    root.recyclerView.adapter =
-//                        FavouritesAdapter(favouritesList)
-//                    root.recyclerView.adapter?.notifyDataSetChanged()
-//                    checkSwipeRefresh()
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {

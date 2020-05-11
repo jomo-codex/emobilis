@@ -19,7 +19,7 @@ import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 
 import ie.wit.R
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.models.AdsModel
 import ie.wit.utils.createLoader
 import ie.wit.utils.hideLoader
@@ -32,7 +32,7 @@ import java.util.*
 
 class EditFragment : Fragment(), AnkoLogger {
 
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     lateinit var loader : AlertDialog
     lateinit var root: View
     var editAd: AdsModel? = null
@@ -43,7 +43,7 @@ class EditFragment : Fragment(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as DonationApp
+        app = activity?.application as TradeList
 
         arguments?.let {
             editAd = it.getParcelable("editAd")

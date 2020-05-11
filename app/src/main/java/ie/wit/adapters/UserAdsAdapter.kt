@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ie.wit.R
 import ie.wit.models.AdsModel
-import ie.wit.models.DonationModel
-import kotlinx.android.synthetic.main.card_donation.view.*
+import kotlinx.android.synthetic.main.card_ad.view.*
 
 interface AdListener {
     fun onAdClick(userad: AdsModel)
@@ -21,7 +20,7 @@ class UserAdsAdapter constructor(var userads: ArrayList<AdsModel>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         return MainHolder(
             LayoutInflater.from(parent?.context).inflate(
-                R.layout.card_donation,
+                R.layout.card_ad,
                 parent,
                 false
             )

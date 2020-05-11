@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import ie.wit.R
 import ie.wit.models.DonationModel
-import kotlinx.android.synthetic.main.card_donation.view.*
 
 
 class FavouritesAdapter constructor(var donations: ArrayList<DonationModel>)

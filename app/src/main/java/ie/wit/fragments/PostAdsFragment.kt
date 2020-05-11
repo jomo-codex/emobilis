@@ -16,7 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import ie.wit.R
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.utils.createLoader
 import ie.wit.utils.hideLoader
 import ie.wit.utils.showLoader
@@ -31,7 +31,7 @@ import ie.wit.models.AdsModel
 
 class PostAdsFragment : Fragment(), AnkoLogger {
 
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     var totalDonated = 0
     lateinit var loader : AlertDialog
     lateinit var root: View
@@ -42,7 +42,7 @@ class PostAdsFragment : Fragment(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as DonationApp
+        app = activity?.application as TradeList
     }
 
     override fun onCreateView(

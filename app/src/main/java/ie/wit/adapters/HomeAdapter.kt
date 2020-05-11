@@ -6,11 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ie.wit.R
-import ie.wit.fragments.HomeFragment
 import ie.wit.models.AdsModel
-import ie.wit.models.DonationModel
-import kotlinx.android.synthetic.main.card_donation.view.*
-import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.home_cardview.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info

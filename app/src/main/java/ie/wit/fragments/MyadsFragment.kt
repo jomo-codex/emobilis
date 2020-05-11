@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener
 import ie.wit.R
 import ie.wit.adapters.AdListener
 import ie.wit.adapters.UserAdsAdapter
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.models.AdsModel
 import ie.wit.utils.*
 import kotlinx.android.synthetic.main.fragment_report.view.*
@@ -27,13 +27,13 @@ import org.jetbrains.anko.info
 class MyadsFragment : Fragment(), AnkoLogger,
     AdListener {
 
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     lateinit var loader : AlertDialog
     lateinit var root: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as DonationApp
+        app = activity?.application as TradeList
     }
 
     override fun onCreateView(

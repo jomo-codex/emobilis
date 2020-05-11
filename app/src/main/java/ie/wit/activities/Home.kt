@@ -26,7 +26,7 @@ import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import ie.wit.R
 import ie.wit.fragments.*
-import ie.wit.main.DonationApp
+import ie.wit.main.TradeList
 import ie.wit.utils.readImage
 import ie.wit.utils.showImagePicker
 import kotlinx.android.synthetic.main.app_bar_home.*
@@ -42,7 +42,7 @@ class Home : AppCompatActivity(), AnkoLogger,
     NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var ft: FragmentTransaction
-    lateinit var app: DonationApp
+    lateinit var app: TradeList
     lateinit var storageReference: StorageReference
     val IMAGE_REQUEST = 1
     lateinit var imageUrl: String
@@ -54,7 +54,7 @@ class Home : AppCompatActivity(), AnkoLogger,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
         setSupportActionBar(toolbar)
-        app = application as DonationApp
+        app = application as TradeList
         fab.setOnClickListener {
             val email = "20087434@mail.wit.ie"
             val subject= "Need help"

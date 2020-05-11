@@ -4,17 +4,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ie.wit.R
-import ie.wit.models.DonationModel
+import ie.wit.fragments.FavouritesFragment
+import ie.wit.models.AdsModel
+import kotlinx.android.synthetic.main.card_ad.view.*
 
+interface FavListener {
 
-class FavouritesAdapter constructor(var donations: ArrayList<DonationModel>)
+}
+class FavouritesAdapter(var ads: ArrayList<AdsModel>, private val listener: FavListener)
     : RecyclerView.Adapter<FavouritesAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         return MainHolder(
-            LayoutInflater.from(parent?.context).inflate(
-                R.layout.card_favourites,
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.card_ad,
                 parent,
                 false
             )
@@ -22,23 +27,23 @@ class FavouritesAdapter constructor(var donations: ArrayList<DonationModel>)
     }
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val donation = donations[holder.adapterPosition]
-        holder.bind(donation)
+        val ad = ads[holder.adapterPosition]
+        holder.bind(ad, listener)
     }
 
-    override fun getItemCount(): Int = donations.size
+    override fun getItemCount(): Int = ads.size
 
     fun removeAt(position: Int) {
-        donations.removeAt(position)
+        ads.removeAt(position)
         notifyItemRemoved(position)
     }
 
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(donation: DonationModel) {
-            itemView.tag = donation
-//            itemView.paymentamount.text = donation.amount.toString()
-//            itemView.paymentmethod.text = donation.paymenttype
-//            itemView.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
+        fun bind(ad: AdsModel, listener: FavListener) {
+            itemView.tag = ad
+            itemView.productName.text = ad.name
+            itemView.shortdersciption.text = ad.short_description
+            Picasso.get().load(ad.imageUrl).into(itemView.AdimageIcon)
         }
     }
 }

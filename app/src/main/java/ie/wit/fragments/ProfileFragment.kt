@@ -109,6 +109,13 @@ class ProfileFragment : Fragment(), AnkoLogger {
             startActivityForResult(chooser, IMAGE_REQUEST)
         }
 
+        layout.total_favourites.setOnClickListener {
+            activity!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.homeFrame, FavouritesFragment.newInstance())
+                .addToBackStack(null)
+                .commit()
+        }
+
         layout.total_ads_posted.setOnClickListener {
             activity!!.supportFragmentManager.beginTransaction()
                 .replace(R.id.homeFrame, MyadsFragment.newInstance())
@@ -312,30 +319,46 @@ class ProfileFragment : Fragment(), AnkoLogger {
         app.database.child("user-advertisements").child(userId!!)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
-                    info("Firebase Donation error : ${error.message}")
+                    info("Firebase error : ${error.message}")
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     hideLoader(loader)
                     val userData = snapshot.children
                     var countPosts = 0
-                    var countVotes = 0
                     userData.forEach {
                         val eachPost = it.
                         getValue(AdsModel::class.java)
                         if (eachPost!!.name.isNotEmpty()){
                             countPosts++
                         }
-                        if (eachPost.upvotes > 0){
-                            countVotes += eachPost.upvotes
-                        }
                         app.database.child("user-advertisements").child(userId)
                             .removeEventListener(this)
                     }
                     root.total_ads_posted.text = countPosts.toString()
-                    root.total_likes.text = countVotes.toString()
                 }
             })
+
+        app.database.child("user-details").child(userId).child("favourites")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    info("Firebase error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    hideLoader(loader)
+                    val userData = snapshot.children
+                    var countFav = 0
+                    userData.forEach {
+                        countFav++
+                        app.database.child("user-details").child(userId).child("favourites")
+                            .removeEventListener(this)
+                    }
+                    root.total_favourites.text = countFav.toString()
+                }
+            })
+
+
     }
 
 }

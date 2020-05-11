@@ -7,24 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import ie.wit.R
+import ie.wit.adapters.FavListener
 import ie.wit.adapters.FavouritesAdapter
 import ie.wit.main.TradeList
-import ie.wit.models.DonationModel
+import ie.wit.models.AdsModel
 import ie.wit.utils.*
 import kotlinx.android.synthetic.main.fragment_report.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
-class FavouritesFragment : Fragment(), AnkoLogger {
+class FavouritesFragment : Fragment(), AnkoLogger , FavListener {
 
     lateinit var app: TradeList
     lateinit var loader : AlertDialog
@@ -46,16 +44,6 @@ class FavouritesFragment : Fragment(), AnkoLogger {
         root.recyclerView.setLayoutManager(LinearLayoutManager(activity))
         setSwipeRefresh()
 
-        val swipeDeleteHandler = object : SwipeToDeleteCallback(activity!!) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = root.recyclerView.adapter as FavouritesAdapter
-                adapter.removeAt(viewHolder.adapterPosition)
-                removeFromFavourites(app.auth.currentUser!!.uid,
-                                  (viewHolder.itemView.tag as DonationModel).uid)
-            }
-        }
-        val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
-        itemTouchDeleteHelper.attachToRecyclerView(root.recyclerView)
         return root
     }
 
@@ -71,7 +59,7 @@ class FavouritesFragment : Fragment(), AnkoLogger {
         root.swiperefresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
             override fun onRefresh() {
                 root.swiperefresh.isRefreshing = true
-                getAllFavouriteDonations(app.auth.currentUser!!.uid)
+                getAllFavouriteAds(app.auth.currentUser!!.uid)
             }
         })
     }
@@ -80,53 +68,64 @@ class FavouritesFragment : Fragment(), AnkoLogger {
         if (root.swiperefresh.isRefreshing) root.swiperefresh.isRefreshing = false
     }
 
-    fun removeFromFavourites(userId: String, uid: String?) {
-        app.database.child("user-donations").child(userId).child(uid!!)
-            .addListenerForSingleValueEvent(
-                object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        snapshot.ref.removeValue()
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                        info("Firebase Donation error : ${error.message}")
-                    }
-                })
-    }
-
-    fun View.snack(message: String, duration: Int = Snackbar.LENGTH_LONG) {
-        Snackbar.make(this, message, duration).show()
-    }
 
     override fun onResume() {
         super.onResume()
-        getAllFavouriteDonations(app.auth.currentUser!!.uid)
+        getAllFavouriteAds(app.auth.currentUser!!.uid)
     }
 
-    fun getAllFavouriteDonations(userId: String?) {
+    fun getAllFavouriteAds(userId: String?) {
         loader = createLoader(activity!!)
-        showLoader(loader, "Downloading Donations from Firebase")
-        val favouritesList = ArrayList<DonationModel>()
-        app.database.child("user-donations").child(userId!!)
+        showLoader(loader, "Downloading ads from Firebase")
+        val favouritesList = ArrayList<String>()
+        app.database.child("user-details").child(userId!!).child("favourites")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
-                    info("Firebase Donation error : ${error.message}")
+                    info("Firebase error : ${error.message}")
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     hideLoader(loader)
                     val children = snapshot.children
                     children.forEach {
-                        val donation = it.
-                            getValue<DonationModel>(DonationModel::class.java)
-                        if(donation!!.isfav) {
-                            favouritesList.add(donation)
-                        }
-                        root.recyclerView.adapter =
-                            FavouritesAdapter(favouritesList)
-                        root.recyclerView.adapter?.notifyDataSetChanged()
-                        checkSwipeRefresh()
+                        favouritesList.add(it.key.toString())
+                        app.database.child("user-details").child("favourites")
+                            .removeEventListener(this)
                     }
+                    getAllFavouriteAdsFromDatabase(favouritesList)
                 }
             })
+
     }
+
+    fun getAllFavouriteAdsFromDatabase(key: ArrayList<String>) {
+        val AdsList = ArrayList<AdsModel>()
+        key.forEach { s ->
+            app.database.child("user-advertisements").child(s)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        info("Firebase error : ${error.message}")
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        hideLoader(loader)
+                        val children = snapshot.children
+                        children.forEach {
+                            val userAd = it.getValue<AdsModel>(AdsModel::class.java)
+                           if(userAd!!.name.isNotEmpty()) {
+                               AdsList.add(userAd)
+                               info { "this is my adlist"+ AdsList }
+                               root.recyclerView.adapter =
+                                   FavouritesAdapter(AdsList, this@FavouritesFragment)
+                               root.recyclerView.adapter?.notifyDataSetChanged()
+                           }
+                            checkSwipeRefresh()
+                            app.database.child("user-advertisements").child(s)
+                                .removeEventListener(this)
+                        }
+                    }
+                })
+        }
+    }
+
 }

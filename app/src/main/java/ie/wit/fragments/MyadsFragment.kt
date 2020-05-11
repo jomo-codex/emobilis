@@ -159,4 +159,6 @@ class MyadsFragment : Fragment(), AnkoLogger,
                 }
             })
     }
+
+
 }
